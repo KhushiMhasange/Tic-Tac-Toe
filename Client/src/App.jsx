@@ -145,9 +145,10 @@ const App = () => {
     const username = result.value;
     setPlayerName(username);
 
-    const newSocket = io("https://tic-tac-toe-r1i7.onrender.com/", {
-      autoConnect: true,
-    });
+    const newSocket = io();
+    // const newSocket = io("https://tic-tac-toe-r1i7.onrender.com/", {
+    //   autoConnect: true,
+    // });
 
     newSocket?.emit("request_to_play", {
       playerName: username,
