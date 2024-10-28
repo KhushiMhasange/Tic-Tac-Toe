@@ -2,8 +2,16 @@ const { createServer } = require("http");
 const { Server } = require("socket.io");
 
 const httpServer = createServer();
+
+// const io = new Server(httpServer, {
+//   cors: "http://localhost:5174/",
+// });
+
 const io = new Server(httpServer, {
-  cors: "http://localhost:5174/",
+  cors: {
+    origin: "https://tic-tac-toe-r1i7.onrender.com", // Update this to your frontend's URL in production
+    methods: ["GET", "POST"],
+  },
 });
 
 const allUsers = {};
@@ -82,4 +90,8 @@ io.on("connection", (socket) => {
   });
 });
 
-httpServer.listen(3000);
+// httpServer.listen(3000);
+const PORT = process.env.PORT || 3000;
+httpServer.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
