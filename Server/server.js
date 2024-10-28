@@ -14,7 +14,7 @@ const httpServer = createServer((req, res) => {
 
 const io = new Server(httpServer, {
   cors: {
-    origin: "https://tic-tac-toe-r1i7.onrender.com", // Update this to your frontend's URL in production
+    origin: "http://localhost:5174/", // Update this to your frontend's URL in production
     methods: ["GET", "POST"],
   },
 });
