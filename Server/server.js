@@ -1,22 +1,29 @@
+const express = require("express");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
+const path = require("path");
 
 // const httpServer = createServer();
 
 // const io = new Server(httpServer, {
 //   cors: "http://localhost:5174/",
 // });
+const app = express(); 
 
-const httpServer = createServer((req, res) => {
-  res.writeHead(200, { 'Content-Type': 'text/plain' });
-  res.end('Socket.io server is running.\n'); // Basic response to confirm it's running
-});
-
+const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: "https://tic-tac-toe-r1i7.onrender.com", // Update this to your frontend's URL in production
+    origin: "https://tic-tac-toe-r1i7.onrender.com", 
     methods: ["GET", "POST"],
   },
+});
+
+// Serve static files from the Client build directory
+app.use(express.static(path.join(__dirname, '../Client/dist'))); 
+
+// Handle requests to the root URL by sending the index.html
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../Client/dist/index.html'));
 });
 
 const allUsers = {};
