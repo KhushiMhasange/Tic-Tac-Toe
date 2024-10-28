@@ -1,0 +1,15 @@
+services:
+  - name: tic-tac-toe-backend
+    type: web
+    env: node
+    plan: free
+    buildCommand: cd server && npm install
+    startCommand: cd server && nodemon server.js
+    autoDeploy: true
+
+  - name: tic-tac-toe-frontend
+    type: web
+    env: static
+    staticPublishPath: client/dist  # Vite’s default build output folder
+    buildCommand: cd client && npm install && npm run build
+    autoDeploy: true
