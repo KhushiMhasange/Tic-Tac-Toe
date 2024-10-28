@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import "./app.css";
+import "./App.css";
 import { io } from "socket.io-client";
 import Square from "./Square/Square";
 import Swal from "sweetalert2";
