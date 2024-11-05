@@ -145,7 +145,7 @@ const App = () => {
     const username = result.value;
     setPlayerName(username);
     
-    const newSocket = io("https://tic-tac-toe-r1i7.onrender.com/", {
+    const newSocket = io("https://tic-tac-toe-backend-damy.onrender.com", {
       autoConnect: true,
     });
 
