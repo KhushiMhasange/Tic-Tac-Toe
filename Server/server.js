@@ -1,30 +1,30 @@
 const express = require("express");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
-const path = require("path");
+// const path = require("path");
 
-// const httpServer = createServer();
+const httpServer = createServer();
 
-// const io = new Server(httpServer, {
-//   cors: "http://localhost:5174/",
-// });
+const io = new Server(httpServer, {
+  cors: "http://localhost:5174/",
+});
 const app = express(); 
 
-const httpServer = createServer(app);
-const io = new Server(httpServer, {
-  cors: {
-    origin: "https://tic-tac-toe-r1i7.onrender.com", 
-    methods: ["GET", "POST"],
-  },
-});
+// const httpServer = createServer(app);
+// const io = new Server(httpServer, {
+//   cors: {
+//     origin: "https://tic-tac-toe-r1i7.onrender.com", 
+//     methods: ["GET", "POST"],
+//   },
+// });
 
 // Serve static files from the Client build directory
-app.use(express.static(path.join(__dirname, '../Client/dist'))); 
+// app.use(express.static(path.join(__dirname, '../Client/dist'))); 
 
 // Handle requests to the root URL by sending the index.html
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../Client/dist/index.html'));
-});
+// app.get('/', (req, res) => {
+  // res.sendFile(path.join(__dirname, '../Client/dist/index.html'));
+// });
 
 const allUsers = {};
 const allRooms = [];
