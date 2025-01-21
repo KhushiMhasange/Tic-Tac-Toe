@@ -1,6 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
+import  { useRef } from "react";
 import "./App.css";
+import winSound from "./assets/win-sound.wav"
+import lostSound from "./assets/lost-sound.wav"
 import { io } from "socket.io-client";
 import Square from "./Square/Square";
 import Swal from "sweetalert2";
@@ -84,11 +87,12 @@ const App = () => {
 
   useEffect(() => {
     const winner = checkWinner();
-
     if (winner) {
       setFinishedState(winner);
     }
   }, [checkWinner, gameState]); //gameState is the dependency array here
+
+  const audioRef = useRef(null);
 
   const takePlayerName = async () => {
     const result = await Swal.fire({
@@ -145,6 +149,7 @@ const App = () => {
     const username = result.value;
     setPlayerName(username);
     
+    //https://tic-tac-toe-backend-damy.onrender.com
     const newSocket = io("https://tic-tac-toe-backend-damy.onrender.com", {
       autoConnect: true,
     });
@@ -203,12 +208,22 @@ const App = () => {
             })
           )}
         </div>
-        {finishedState && finishedState !=="opponentLeftMatch" && finishedState !== "draw" && (
-          <h3 className="finished-state">{finishedState===playingAs? "You ":OpponentName} won the match</h3>
-        )}
+        {finishedState && 
+        finishedState !== "opponentLeftMatch" && 
+        finishedState !== "draw" && (
+          <>
+            <h3 className="finished-state">
+              {finishedState === playingAs ? "You " : OpponentName} won the match
+            </h3>
+            <audio ref={audioRef} src={finishedState ===playingAs?winSound:lostSound} autoPlay />
+          </>
+        )
+        }
         {finishedState && finishedState !=="opponentLeftMatch" && finishedState === "draw" && (
-          // eslint-disable-next-line react/no-unescaped-entities
-          <h3 className="finished-state">It's a Draw</h3>
+          <>
+          <h3 className="finished-state">It&apos;s a Draw</h3>
+          <audio ref={audioRef} src={lostSound} autoPlay />
+          </>
         )}
         </div>
         {!finishedState && OpponentName && (
@@ -217,9 +232,12 @@ const App = () => {
           </h2>
         )}
         {finishedState && finishedState ==="opponentLeftMatch" && (
+          <>
           <h3>
             You won the Match, {OpponentName} Left
           </h3>
+          <audio ref={audioRef} src={winSound} autoPlay />
+          </>
         )}
     </div>
   );

@@ -10,25 +10,10 @@ const io = new Server(httpServer, {
 });
 const app = express(); 
 
-// const httpServer = createServer(app);
-// const io = new Server(httpServer, {
-//   cors: {
-//     origin: "https://tic-tac-toe-r1i7.onrender.com", 
-//     methods: ["GET", "POST"],
-//   },
-// });
-
-// Serve static files from the Client build directory
-// app.use(express.static(path.join(__dirname, '../Client/dist'))); 
-
-// Handle requests to the root URL by sending the index.html
-// app.get('/', (req, res) => {
-  // res.sendFile(path.join(__dirname, '../Client/dist/index.html'));
-// });
-
 const allUsers = {};
 const allRooms = [];
 
+//This event is triggered when a new player connects to the server.
 io.on("connection", (socket) => {
   allUsers[socket.id] = {
     socket: socket,
@@ -79,6 +64,11 @@ io.on("connection", (socket) => {
     } else {
       currentUser.socket.emit("Opponent Not Found");
     }
+  });
+
+  socket.on("playMoveSound", (data) => {
+    socket.broadcast.emit("playMoveSound", data);
+    socket.emit("playMoveSound", data); 
   });
 
   socket.on("disconnect", function () {
