@@ -175,7 +175,7 @@ const App = () => {
     setPlayerName(username);
     
     //https://tic-tac-toe-backend-damy.onrender.com
-    const newSocket = io("localhost:3000", {
+    const newSocket = io("https://tic-tac-toe-backend-damy.onrender.com", {
       autoConnect: true,
     });
 
