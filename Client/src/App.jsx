@@ -1,10 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-// import  { useRef } from "react";
 import "./App.css";
 import winSound from "./assets/win-sound.wav"
 import lostSound from "./assets/lost-sound.wav"
-import bgSound from "./assets/bg-sound.mp3"
 import { io } from "socket.io-client";
 import Square from "./Square/Square";
 import Confetti from "react-confetti";
@@ -96,16 +94,16 @@ const App = () => {
     }
   }, [checkWinner, gameState]); //gameState is the dependency array here
 
-  useEffect(()=>{
-    const audio = new Audio(bgSound);
-     if(!finishedState&&OpponentName){
-      audio.volume = 0.3;
-      audio.loop = true;
-      audio.play();
-     }else{
-      audio.pause();
-     }
-  },[finishedState,OpponentName]);
+  // useEffect(()=>{
+  //   const audio = new Audio(bgSound);
+  //    if(!finishedState&&OpponentName){
+  //     audio.volume = 0.3;
+  //     audio.loop = true;
+  //     audio.play();
+  //    }else{
+  //     audio.pause();
+  //    }
+  // },[finishedState,OpponentName]);
   
   useEffect(() => {
     if (finishedState === playingAs) {
@@ -177,7 +175,7 @@ const App = () => {
     setPlayerName(username);
     
     //https://tic-tac-toe-backend-damy.onrender.com
-    const newSocket = io("https://tic-tac-toe-backend-damy.onrender.com", {
+    const newSocket = io("localhost:3000", {
       autoConnect: true,
     });
 
@@ -206,10 +204,10 @@ const App = () => {
       </div>
     )
   }
-
+  
   return (
     <div className="main-div">
-      <div className="move-detection">
+      <div className="move-detection">  
         <div className={`left ${currentPlayer===playingAs ? "current-move-"+currentPlayer:''}`}>{playerName}</div>
         <div className={`right ${currentPlayer!==playingAs ? "current-move-"+currentPlayer:''}`}>{OpponentName}</div>
       </div>
@@ -243,6 +241,7 @@ const App = () => {
             <h3 className="finished-state">
               {finishedState === playingAs ? "You " : OpponentName} won the match
             </h3>
+            {/* {.pause()}/ */}
             {/* <audio key={finishedState} src={ finishedState === playingAs ? winSound : lostSound} autoPlay /> */}
           </>
         )
