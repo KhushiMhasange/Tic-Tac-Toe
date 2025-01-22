@@ -98,7 +98,7 @@ const App = () => {
 
   useEffect(()=>{
     const audio = new Audio(bgSound);
-     if(finishedState===false && finishedState !== "draw" && finishedState !== "opponentLeftMatch"){
+     if(!finishedState&&OpponentName){
       audio.volume = 0.3;
       audio.loop = true;
       audio.play();
