@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { useState } from "react";
-import { useEffect,useRef } from "react";
 import moveSound from "../assets/move-sound.wav";
 import "./Square.css";
 
@@ -61,8 +60,7 @@ const Square = ({
   id,
 }) => {
   const [icon, setIcon] = useState(null);
-  //We use useRef in React to create a persistent reference to a value that does not cause re-renders when updated.
-  const audioRef = useRef(new Audio(moveSound));
+  
   const clickOnSquare = () => {
 
     if(playingAs !== currentPlayer){
@@ -74,12 +72,12 @@ const Square = ({
     }
     
     if (!icon) {
+      const audio = new Audio(moveSound);
+      audio.play();
+      
       if (currentPlayer === "circle"){ setIcon(circleSvg)}
       else{ setIcon(crossSvg)};
-      
-      audioRef.current.currentTime = 0; // Reset audio in case of quick moves
-      audioRef.current.play();
-
+    
       const myCurrentPlayer = currentPlayer;
       //to toggle player
       socket.emit("playerMoveFromClient", {
@@ -88,8 +86,6 @@ const Square = ({
           sign: currentPlayer,
         },
       });
-      
-      socket.emit("playMoveSound");
 
       setCurrentPlayer(currentPlayer === "circle" ? "cross" : "circle");
 
@@ -104,17 +100,6 @@ const Square = ({
       });
     }
   };
-  useEffect(() => {
-    // Listen for move sound event from the opponent
-    socket.on("playMoveSound", () => {
-      audioRef.current.currentTime = 0;
-      audioRef.current.play();
-    });
-
-    return () => {
-      socket.off("playMoveSound");
-    };
-  }, [socket]);
   return (
     <div
       onClick={clickOnSquare}

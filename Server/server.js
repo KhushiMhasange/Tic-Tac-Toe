@@ -66,11 +66,6 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("playMoveSound", (data) => {
-    socket.broadcast.emit("playMoveSound", data);
-    socket.emit("playMoveSound", data); 
-  });
-
   socket.on("disconnect", function () {
     const currentUser = allUsers[socket.id];
     currentUser.online = false;

@@ -1,11 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import  { useRef } from "react";
+// import  { useRef } from "react";
 import "./App.css";
 import winSound from "./assets/win-sound.wav"
 import lostSound from "./assets/lost-sound.wav"
+import bgSound from "./assets/bg-sound.mp3"
 import { io } from "socket.io-client";
 import Square from "./Square/Square";
+import Confetti from "react-confetti";
 import Swal from "sweetalert2";
 
 //start from 2:31
@@ -26,6 +28,8 @@ const App = () => {
   const [playerName, setPlayerName] = useState("");
   const [OpponentName, setOpponentName] = useState(null);
   const [playingAs, setPlayingAs] = useState(null);
+  const [showConfetti, setShowConfetti] = useState(false);
+  
 
   const checkWinner = () => {
     //row dynamic that any row has all same move (O or X)
@@ -92,7 +96,30 @@ const App = () => {
     }
   }, [checkWinner, gameState]); //gameState is the dependency array here
 
-  const audioRef = useRef(null);
+  useEffect(()=>{
+    const audio = new Audio(bgSound);
+     if(!finishedState && finishedState !== "draw" && finishedState !== "opponentLeftMatch"){
+      audio.volume = 0.5;
+      audio.loop = true;
+      audio.play();
+     }else{
+      audio.pause();
+     }
+  },[finishedState,OpponentName]);
+  
+  useEffect(() => {
+    if (finishedState === playingAs) {
+      setShowConfetti(true);
+      const winAudio = new Audio(winSound);
+      winAudio.play();
+  
+      // Stop confetti after 5 seconds
+      setTimeout(() => setShowConfetti(false), 5000);
+    } else if (finishedState && finishedState !== "draw" && finishedState !== "opponentLeftMatch") {
+      const loseAudio = new Audio(lostSound);
+      loseAudio.play();
+    }
+  }, [finishedState, playingAs]);
 
   const takePlayerName = async () => {
     const result = await Swal.fire({
@@ -163,7 +190,8 @@ const App = () => {
 
   if (!playWithFriends) {
     return (
-      <div className="main-div">
+      <div className="main-div-before">
+        <h1 className="game-heading-before">TIC TAC TOE</h1>
         <button onClick={playWithFriendsClick} className="play-with-friends">
           Play with Friends
         </button>
@@ -215,14 +243,15 @@ const App = () => {
             <h3 className="finished-state">
               {finishedState === playingAs ? "You " : OpponentName} won the match
             </h3>
-            <audio ref={audioRef} src={finishedState ===playingAs?winSound:lostSound} autoPlay />
+            {/* <audio key={finishedState} src={ finishedState === playingAs ? winSound : lostSound} autoPlay /> */}
           </>
         )
         }
+        {showConfetti && <Confetti />}
         {finishedState && finishedState !=="opponentLeftMatch" && finishedState === "draw" && (
           <>
           <h3 className="finished-state">It&apos;s a Draw</h3>
-          <audio ref={audioRef} src={lostSound} autoPlay />
+          <audio key={finishedState} src={lostSound} autoPlay />
           </>
         )}
         </div>
@@ -236,7 +265,7 @@ const App = () => {
           <h3>
             You won the Match, {OpponentName} Left
           </h3>
-          <audio ref={audioRef} src={winSound} autoPlay />
+          <audio key={finishedState}  src={winSound} autoPlay />
           </>
         )}
     </div>
